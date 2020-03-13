@@ -1,0 +1,25 @@
+name: bcore-gui
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - certifi
+  - pip
+  - python=3.7
+  - setuptools
+  - wheel
+  - matplotlib
+  - numpy
+  - scipy
+  - pandas
+  - git
+  - pytest
+  - kivy
+  - pip:
+    - psychopy
+    - tqdm
+    - verlib
+    - zmq
+    - json-tricks
+    - netifaces
+    - pygame

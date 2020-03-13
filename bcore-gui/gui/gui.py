@@ -30,7 +30,7 @@ from kivy.graphics.vertex_instructions import (Rectangle,
                                                Line)
 from kivy.graphics.context_instructions import Color
 
-from bcore.classes.Subject import Subject, Mouse, Rat, Virtual, Human, DefaultMouse, DefaultRat, DefaultVirtual, DefaultHuman
+from bcore.classes.Subject import Subject, Mouse, Rat, VirtualSubject, Human, DefaultMouse, DefaultRat, DefaultVirtual, DefaultHuman
 #lint:enable
 
 
@@ -69,16 +69,16 @@ class StationButton(Button):
 
 
 class SubjectIDInput(TextInput):
-    def validateSubIDInput(self, call):
+    def validate_subID_input(self, call):
         for c in self.text:
             if c in (' ', '-'):
                 self.text = 'Only alphanumerics and underscores allowed'
 
-    def getText(self):
+    def get_text(self):
         return self.text
 
 class ChoiceSpinner(Spinner):
-    def getText(self):
+    def get_text(self):
         return self.text
 ###############################################################################
 #                                ACTION BARS                                  #
@@ -111,82 +111,82 @@ class BServerAppScreenManager(ScreenManager):
 
 
 class BaseScreen(Screen):
-    def updateScreen(self, data):
-        self.updateSubjects(data.getSubjectIDs())
+    def update_screen(self, data):
+        self.update_subjects(data.get_subject_ids())
         # allow scroll
-        self.enableScroll()
-        self.updateStations(data.getStationNames())
+        self.enable_scroll()
+        self.update_stations(data.get_station_names())
 
-    def enableScroll(self):
-        subjectList = self.ids['subject_listing']
-        subjectList.bind(minimum_height=subjectList.setter('height'))
+    def enable_scroll(self):
+        subject_list = self.ids['subject_listing']
+        subject_list.bind(minimum_height=subject_list.setter('height'))
 
-    def updateSubjects(self, subjects):
-        subjectList = self.ids['subject_listing']
+    def update_subjects(self, subjects):
+        subject_list = self.ids['subject_listing']
         for subject in subjects:
             subjLbl = StatusLabel(text='Subject_' + subject,
                 height=30,
                 size_hint_y=None)
-            subjectList.add_widget(subjLbl)
+            subject_list.add_widget(subjLbl)
 
-    def updateStations(self, stations):
-        stationList = self.ids['station_listing']
+    def update_stations(self, stations):
+        station_list = self.ids['station_listing']
         for station in stations:
             stLbl = StatusLabel(text='Station:\n' + station,
                 )
-            stationList.add_widget(stLbl)
+            station_list.add_widget(stLbl)
 
 
 class SubjectStatisticsScreen(Screen):
-    def updateScreen(self, data):
-        self.updateSubjects(data.getSubjectIDs())
+    def update_screen(self, data):
+        self.update_subjects(data.get_subject_ids())
         # allow scroll
-        self.enableScroll()
+        self.enable_scroll()
 
-    def updateSubjects(self, subjects):
-        subjectList = self.ids['subject_button_listing']
+    def update_subjects(self, subjects):
+        subject_list = self.ids['subject_button_listing']
         for subject in subjects:
             subjLbl = Button(text='Subject_' + subject,
                 height=30,
                 size_hint_y=None)
-            subjectList.add_widget(subjLbl)
+            subject_list.add_widget(subjLbl)
 
-    def enableScroll(self):
-        subjectList = self.ids['subject_button_listing']
-        subjectList.bind(minimum_height=subjectList.setter('height'))
+    def enable_scroll(self):
+        subject_list = self.ids['subject_button_listing']
+        subject_list.bind(minimum_height=subject_list.setter('height'))
 
 
 class StationStatisticsScreen(Screen):
-    def updateScreen(self, data):
-        self.updateStations(data.getStationNames())
-        self.enableScroll()
+    def update_screen(self, data):
+        self.update_stations(data.get_station_names())
+        self.enable_scroll()
 
-    def enableScroll(self):
-        subjectList = self.ids['station_button_listing']
-        subjectList.bind(minimum_height=subjectList.setter('height'))
+    def enable_scroll(self):
+        subject_list = self.ids['station_button_listing']
+        subject_list.bind(minimum_height=subject_list.setter('height'))
 
-    def updateStations(self, stations):
-        stationList = self.ids['station_button_listing']
+    def update_stations(self, stations):
+        station_list = self.ids['station_button_listing']
         for station in stations:
             stLbl = Button(text='Station:\n' + station,
                 )
-            stationList.add_widget(stLbl)
+            station_list.add_widget(stLbl)
 
 
 class AddSubjectScreen(Screen):
-    def extractDataAndAddSubject(self, kw_function, example, app,
+    def extract_data_and_add_subject(self, kw_function, example, app,
         pressedButton):
         print('creating values and adding subjects')
         kw_value = {}
-        for key, value in kw_function.iteritems():
+        for key, value in kw_function.items():
             if hasattr(value, '__call__'):
                 kw_value[key] = value()
             else:
                 kw_value[key] = value
             print (key, kw_value[key])
-        app.serverData.addSubject(example.createSubject(**kw_value))
+        app.serverData.add_subject(example.create_subject(**kw_value))
 
-    def presentSpeciesSpecificWidgets(self, layout, present, details,
+    def present_species_specific_widgets(self, layout, present, details,
         example, app):
         kw_function = {}
         # now add a vertical box layout and add the choices
@@ -198,10 +198,10 @@ class AddSubjectScreen(Screen):
             subjectIDLayout.add_widget(Label(text='Subject ID'))
             subIDInput = SubjectIDInput(hint_text='Press Enter when done',
                 multiline=False)
-            subIDInput.bind(on_text_validate=subIDInput.validateSubIDInput)
+            subIDInput.bind(on_text_validate=subIDInput.validate_subID_input)
             subjectIDLayout.add_widget(subIDInput)
             OtherFields.add_widget(subjectIDLayout)
-            kw_function['subjectID'] = subIDInput.getText
+            kw_function['subjectID'] = subIDInput.get_text
 
         # firstName
         if present['firstName']:
@@ -212,7 +212,7 @@ class AddSubjectScreen(Screen):
                 multiline=False)
             FirstNameLayout.add_widget(firstNameInput)
             OtherFields.add_widget(FirstNameLayout)
-            kw_function['firstName'] = firstNameInput.getText
+            kw_function['firstName'] = firstNameInput.get_text
 
         # lastName
         if present['lastName']:
@@ -223,7 +223,7 @@ class AddSubjectScreen(Screen):
                 multiline=False)
             LastNameLayout.add_widget(lastNameInput)
             OtherFields.add_widget(LastNameLayout)
-            kw_function['lastName'] = lastNameInput.getText
+            kw_function['lastName'] = lastNameInput.get_text
 
         # gender
         if present['gender']:
@@ -235,7 +235,7 @@ class AddSubjectScreen(Screen):
                 size=(150, 40))
             genderLayout.add_widget(genderInput)
             OtherFields.add_widget(genderLayout)
-            kw_function['gender'] = genderInput.getText
+            kw_function['gender'] = genderInput.get_text
 
         # dob
         if present['dob']:
@@ -257,7 +257,7 @@ class AddSubjectScreen(Screen):
                 size=(150, 40))
             strainLayout.add_widget(strainInput)
             OtherFields.add_widget(strainLayout)
-            kw_function['strain'] = strainInput.getText
+            kw_function['strain'] = strainInput.get_text
 
         # geneBkgd
         if present['geneBkgd']:
@@ -269,7 +269,7 @@ class AddSubjectScreen(Screen):
                 size=(150, 40))
             geneBkgdLayout.add_widget(geneBkgdInput)
             OtherFields.add_widget(geneBkgdLayout)
-            kw_function['geneBkgd'] = geneBkgdInput.getText
+            kw_function['geneBkgd'] = geneBkgdInput.get_text
 
         # anonymize
         if present['anonymize']:
@@ -289,9 +289,9 @@ class AddSubjectScreen(Screen):
         addSubjectLayout = BoxLayout(orientation='horizontal', height=80,
                 size_hint_y=None)
         addSubjectButton = Button(text='Add Subject')
-        extractDataAndAddSubject = functools.partial(
-            self.extractDataAndAddSubject, kw_function, example, app)
-        addSubjectButton.bind(on_press=extractDataAndAddSubject)
+        extract_data_and_add_subject = functools.partial(
+            self.extract_data_and_add_subject, kw_function, example, app)
+        addSubjectButton.bind(on_press=extract_data_and_add_subject)
         addSubjectLayout.add_widget(addSubjectButton)
         OtherFields.add_widget(addSubjectLayout)
         print ('[INFO]\t added add subject button')
@@ -313,46 +313,46 @@ class AddSubjectScreen(Screen):
         details = {}
         if species == 'Mouse':
             example = DefaultMouse()
-            details['allowedGenders'] = example.allowedGenders()
-            details['allowedStrains'] = example.allowedStrains()
-            details['allowedGeneBkgd'] = example.allowedGeneBkgd()
+            details['allowedGenders'] = example.allowed_genders()
+            details['allowedStrains'] = example.allowed_strains()
+            details['allowedGeneBkgd'] = example.allowed_gene_bkgd()
             present['subjectID'] = True
             present['gender'] = True
             present['dob'] = True
             present['strains'] = True
             present['geneBkgd'] = True
 
-            self.presentSpeciesSpecificWidgets(
+            self.present_species_specific_widgets(
                 layout, present, details, example, app)
         elif species == 'Rat':
             example = DefaultRat()
-            details['allowedGenders'] = example.allowedGenders()
-            details['allowedStrains'] = example.allowedStrains()
-            details['allowedGeneBkgd'] = example.allowedGeneBkgd()
+            details['allowedGenders'] = example.allowed_genders()
+            details['allowedStrains'] = example.allowed_strains()
+            details['allowedGeneBkgd'] = example.allowed_gene_bkgd()
             present['subjectID'] = True
             present['gender'] = True
             present['dob'] = True
             present['strains'] = True
             present['geneBkgd'] = True
 
-            self.presentSpeciesSpecificWidgets(
+            self.present_species_specific_widgets(
                 layout, present, details, example, app)
         elif species == 'Virtual':
             example = DefaultVirtual()
             present['subjectID'] = True
 
-            self.presentSpeciesSpecificWidgets(
+            self.present_species_specific_widgets(
                 layout, present, details, example, app)
         elif species == 'Human':
             example = DefaultHuman()
-            details['allowedGenders'] = example.allowedGenders()
+            details['allowedGenders'] = example.allowed_genders()
             present['firstName'] = True
             present['lastName'] = True
             present['gender'] = True
             present['dob'] = True
             present['anonymize'] = True
 
-            self.presentSpeciesSpecificWidgets(
+            self.present_species_specific_widgets(
                 layout, present, details, example, app)
 
 ###############################################################################
@@ -363,13 +363,13 @@ class BServerWidget(BoxLayout):
     def changeToSubjectStatisticsScreen(self, data):
         print ('changing to subject statistics')
         screenMgr = self.ids['screen_manager']
-        self.ids['subject_statistics'].updateScreen(data)
+        self.ids['subject_statistics'].update_screen(data)
         screenMgr.current = 'SubjectStatistics'
 
     def changeToStationStatisticsScreen(self, data):
         print ('changing to station statistics')
         screenMgr = self.ids['screen_manager']
-        self.ids['station_statistics'].updateScreen(data)
+        self.ids['station_statistics'].update_screen(data)
         screenMgr.current = 'StationStatistics'
 
     def changeToAddSubjectScreen(self, data):
@@ -380,7 +380,7 @@ class BServerWidget(BoxLayout):
     def changeToBaseScreen(self, data):
         print ('changing to base screen')
         screenMgr = self.ids['screen_manager']
-        self.ids['base_screen'].updateScreen(data)
+        self.ids['base_screen'].update_screen(data)
         screenMgr.current = 'BaseScreen'
 
     def changeScreen(self, screen, data):
@@ -427,9 +427,9 @@ class BServerApp(App):
 
 
 if __name__ == "__main__":
-    from BCore.Classes.ClientAndServer.BServerLocal import DefaultBServerLocal
+    from bcore.classes.ClientAndServer.BServer import BServerLocal
     Config.set('graphics', 'fullscreen', 'fake-fullscreen')
     Config.write()
-    app = BServerApp(serverData=DefaultBServerLocal()).run()
+    app = BServerApp(serverData=BServerLocal()).run()
     Config.set('graphics', 'fullscreen', 0)
     Config.write()
