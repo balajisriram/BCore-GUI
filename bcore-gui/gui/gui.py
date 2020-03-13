@@ -30,9 +30,7 @@ from kivy.graphics.vertex_instructions import (Rectangle,
                                                Line)
 from kivy.graphics.context_instructions import Color
 
-from BCore.Classes.Subjects.Subject import Subject, Mouse, Rat, Virtual, Human
-from BCore.Classes.Subjects.Subject import DefaultMouse, DefaultRat
-from BCore.Classes.Subjects.Subject import DefaultVirtual, DefaultHuman
+from bcore.classes.Subject import Subject, Mouse, Rat, Virtual, Human, DefaultMouse, DefaultRat, DefaultVirtual, DefaultHuman
 #lint:enable
 
 
